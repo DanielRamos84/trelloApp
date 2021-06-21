@@ -1,6 +1,34 @@
 {
-  "boards": [],
+  "boards": [
+    {
+      "name": "Board #1",
+      "user": 0,
+      "id": 75984582906,
+      "starred": false,
+      "created": "2021-06-21"
+    },
+    {
+      "name": "Second one",
+      "user": 1,
+      "id": 29454093432,
+      "starred": false,
+      "created": "2021-06-21"
+    },
+    {
+      "name": "Third One",
+      "user": 1,
+      "id": 88468223975,
+      "starred": false,
+      "created": "2021-06-21"
+    }
+  ],
   "tasks": [],
-  "users": [],
+  "users": [
+    {
+      "email": "some@email.com",
+      "password": "$2a$10$uHvhqukcsYJjtDsTNI0Q0eyDThJvhd0KZSFjfN..gAd3Pwc36sAxa",
+      "id": 1
+    }
+  ],
   "lists": []
 }
