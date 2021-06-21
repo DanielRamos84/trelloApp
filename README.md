@@ -19,4 +19,4 @@ For more tips and tricks regarding Cypress, make sure you visit [my homepage](ht
 
 Credit to Test automation University team.
 
-## My own tests can be located under cypress/integration/own test   <a href="https://github.com/DanielRamos84/trelloAp/tree/main/cypress/integration/owntests">Own Folder</a> folder:heavy_check_mark:
+## My own tests can be located under cypress/integration/own test   <a href="https://github.com/DanielRamos84/trelloAp/tree/master/cypress/integration/owntests">Own Folder</a> folder:heavy_check_mark:
