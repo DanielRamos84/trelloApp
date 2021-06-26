@@ -1,9 +1,33 @@
 ## _logintest.spec.js_
 Trello Flow Test Objectives: 
-- Bypass Login UI storing our session cookies
+- Bypass Login UI storing our session cookies, problem trying to solve "Cypress automatically clears all cookies before each test to prevent state from building up."
+    - We Sign up creating a new account for Trello app use, login with our new credentials. Chrome Dev Tools > Application > Cookies notice this sets a trello_token cookie with Value.
+    <img src="..\..\..\Images\2021-06-25_15-03-42.png">
+
+    - In our spec file there's a two part operation. _First_ a before block where we visit localhost and login to the application using our custom command `cy.login() ` 
+    - We also set our cookie value in the same before block, keep in mind this isn't the best place to store that information but for our testing purposes for now this is we're se are setting it.
+    -  _Second_ create a beforeEach block where again we visit localhost but in here the key is to preserve cookies for this spec file using `Cypress.Cookies.preserveOnce('trello_token', 'yourcookievalue')`
+    
+    <img src="../../../Images\2021-06-25_15-13-02.png">
+
+    - Run the test _once only_ and this will now save the cookie and we'll no longer have to login in between tests, add a simple test in your it block to assert when your logged in your email is displayed.
+
+    <img src="../../../Images\2021-06-25_15-14-14.png">
+
+    - After running the test for the first time now we must comment out the before statement because we don't want to set cookie again, we've already saved it in our beforeEach hook and the remainder of the tests we'll no longer be logged out.
+
+    <img src="../../../Images\2021-06-25_20-57-52.png">
+
+    - In trello app create two boards Second one and Third One, log out of system, log back in notice both boards are presented by default.
+    - To test this we visit the url for each individual board on its own it block without loosing cookies in between tests.
+
+    <img src="../../../Images\2021-06-25_20-59-21.png">
+
+    - Credentials shouldn't be stored in the commands.js file and cookes shouldn't be stored in the spec file test, we'll be addressing that next.
 
 ## _trellotest.spec.js_
 - For e2e testing in this application we're only focusing on testing the behavior of a single board, list, tasks associated to this.  We can have multiple boards, lists etc created as we execute the test suite but testing the other items is out of scope.
+- Also we are creating a board in our application runing in localhost getting the ID for that board (id appended to the url) and setting that as our baseUrl in `cypress.json` file.  So we first run only the first it block that contains `cy.addFirstBoard()` grab the url with the board if and use that in `cypress.json`. Then we skip that it block, _this is wrong approach but we'll fix that later._
 
 Visit localhost assert the following: Trello image and Log in button in nav bar, an h1 that reads My Boards, a card that reads Create a board...
 
@@ -44,12 +68,12 @@ Cypress.Commands.add('checkTaskText', ()=>{
 - _New Problem:_ We are harcoding the index that we want to check the text-title for being first and second as well as hardcoding the text to assert.  How can we solve this?
 
 Star a board moving this to My Starred collection, challenge here is the start element style display is none.  User has to hover over the board to simulate the start showing up and then clicking this.
-- Solution #1: Target the element and force click cy.get('[data-cy="star"]')
+- Solution #1: Target the element and force click `cy.get('[data-cy="star"]')`
 
-- Solution #2: Use invoke attribute to show cy.get('[data-cy="star"]').invoke('show')
-- _Problem_: After running invoke ('show') how to I reset its state?
-- _Solution:_ Remove attribute cy.get('[data-cy="star"]').invoke('removeAttr', 'show')
-- _Problem:_ Flaky test get expected <svg.Star> not to be visible
-- Solution:??? 
+- Solution #2: Use invoke attribute to show `cy.get('[data-cy="star"]').invoke('show')`
+- _Problem_: After running `invoke.('show')` how to I reset its state?
+- _Solution:_ Remove attribute `cy.get('[data-cy="star"]').invoke('removeAttr', 'show')`
+- _Problem:_ Flaky test get `expected <svg.Star> not to be visible`
+- _Solution:_ `_``cy.get('[data-cy="star"]').invoke('hidden')_``
 
-- Solution #3: Use of event listeners cy.get('[data-cy="board-item"]').trigger('mouseover')
+- Solution #3: Use of event listeners `cy.get('[data-cy="board-item"]').trigger('mouseover')`
