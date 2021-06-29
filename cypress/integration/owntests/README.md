@@ -34,7 +34,9 @@ Cypress.Cookies.defaults({
     preserve: 'trello_token',
   });
 
-```- Added after block that exectues once after all it blocks, here we clear the trello_token cookie so that we no longer have to comment out sections of the code as it was done in the first iteration.
+```
+- Added after block that exectues once after all it blocks, here we clear the trello_token cookie so that we no longer have to comment out sections of the code as it was done in the first iteration.
+
 ```
 after(()=>{
     cy.getCookies().should('have.length', 2)
@@ -43,7 +45,6 @@ after(()=>{
 });
 
 ```
-- 
 ## _trellotest.spec.js_
 - For e2e testing in this application we're only focusing on testing the behavior of a single board, list, tasks associated to this.  We can have multiple boards, lists etc created as we execute the test suite but testing the other items is out of scope.
 - Also we are creating a board in our application runing in localhost getting the ID for that board (id appended to the url) and setting that as our baseUrl in `cypress.json` file.  So we first run only the first it block that contains `cy.addFirstBoard()` grab the url with the board if and use that in `cypress.json`. Then we skip that it block, _this is wrong approach but we'll fix that later._
