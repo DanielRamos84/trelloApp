@@ -10,16 +10,25 @@ Cypress.Commands.add('addBoard', (input) => {
 
 })
 
-Cypress.Commands.add('loginSetCookie',()=>{
-  cy.get('[data-cy="login-menu"]').should('be.visible')
-            .click();
-        cy.get('[data-cy="login-email"').type('some@email.com');
-        cy.get('[data-cy="login-password"]').type('danrautomation',{log:false})
-        cy.get('[data-cy="login"').click();
-        cy.get('[data-cy="logged-user"]').contains('some@email.com')
-
-        // cy.setCookie('trello_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNvbWVAZW1haWwuY29tIiwiaWF0IjoxNjI0Mjk0NDM5LCJleHAiOjE2MjQyOTgwMzksInN1YiI6IjEifQ.qffhJood2ZwmXijWMfwZZOdcQJ_gFagX64VNQx1CFv8')
-})
+Cypress.Commands.add('login',()=>{
+  const email= Cypress.env('email');
+  const password= Cypress.env('password')
+  
+  cy.contains('[data-cy="login-menu"]', 'Log in').should('be.visible')
+    .click();
+  
+  cy.get('[data-cy="login-email"').type(email);
+    cy.get('[data-cy="login-password"]').type(password, {log:false})
+    cy.get('[data-cy="login"').click();
+    cy.get('[data-cy="logged-user"]').contains('some@email.com')
+  
+    const log= Cypress.log({
+    name:"Login",
+    displayName:"Authorized login using cookies ",
+    message:[`${email}`]        
+    });
+  
+  });
 
 Cypress.Commands.add('addFirstBoard',(boardText)=>{
   cy.visit('http://localhost:3000/');
@@ -29,15 +38,19 @@ Cypress.Commands.add('addFirstBoard',(boardText)=>{
 })
 
 Cypress.Commands.add('addList',(listName)=>{
-  cy.get('[data-cy="add-list"]').click();
+  cy.get('.CreateList').find('[data-cy="add-list"]').click();
         cy.get('[data-cy="add-list-input"]').type(listName);
         cy.get('[data-cy="save"]').click();
 })
 
 Cypress.Commands.add('addTask',(taskName)=>{
-  cy.get('[data-cy="new-task"]').eq(0).click()
-        cy.get('[data-cy="task-input"]').eq(0).type(taskName);
-        cy.get('[data-cy="add-task"]').eq(0).click();
+  cy.contains('[data-cy="new-task"]', 'Add new task').click();
+  
+  cy.get('[data-cy="task-input"]')
+    .should('be.visible')
+    .type(taskName);
+        
+  cy.get('[data-cy="add-task"]').click();
 });
 
 Cypress.Commands.add('checkTaskText', ()=>{
@@ -58,7 +71,7 @@ Cypress.Commands.add('showStar',()=>{
 });
 
 Cypress.Commands.add('hideStar',()=>{
-  cy.get('[data-cy="star"]').invoke('removeAttr', 'show')
+  cy.get('[data-cy="star"]').invoke('hide')
 
   const log= Cypress.log({
     name: "Hide star",

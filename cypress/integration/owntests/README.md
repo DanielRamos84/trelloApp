@@ -1,30 +1,49 @@
 ## _logintest.spec.js_
 Trello Flow Test Objectives: 
 - Bypass Login UI storing our session cookies, problem trying to solve "Cypress automatically clears all cookies before each test to prevent state from building up."
-    - We Sign up creating a new account for Trello app use, login with our new credentials. Chrome Dev Tools > Application > Cookies notice this sets a trello_token cookie with Value.
+## _First iteration_
+- We Sign up creating a new account for Trello app use, login with our new credentials. Chrome Dev Tools > Application > Cookies notice this sets a trello_token cookie with Value.
     <img src="..\..\..\Images\2021-06-25_15-03-42.png">
 
-    - In our spec file there's a two part operation. _First_ a before block where we visit localhost and login to the application using our custom command `cy.login() ` 
-    - We also set our cookie value in the same before block, keep in mind this isn't the best place to store that information but for our testing purposes for now this is we're se are setting it.
-    -  _Second_ create a beforeEach block where again we visit localhost but in here the key is to preserve cookies for this spec file using `Cypress.Cookies.preserveOnce('trello_token', 'yourcookievalue')`
+- In our spec file there's a two part operation. _First_ a before block where we visit localhost and login to the application using our custom command `cy.login() ` 
+- We also set our cookie value in the same before block, keep in mind this isn't the best place to store that information but for our testing purposes for now this is we're se are setting it.
+-  Create a beforeEach block where again we visit localhost but in here the key is to preserve cookies for this spec file using `Cypress.Cookies.preserveOnce('trello_token', 'yourcookievalue')`
     
     <img src="../../../Images\2021-06-25_15-13-02.png">
 
-    - Run the test _once only_ and this will now save the cookie and we'll no longer have to login in between tests, add a simple test in your it block to assert when your logged in your email is displayed.
+- Run the test _once only_ and this will now save the cookie and we'll no longer have to login in between tests, add a simple test in your it block to assert when your logged in your email is displayed.
 
-    <img src="../../../Images\2021-06-25_15-14-14.png">
+ <img src="../../../Images\2021-06-25_15-14-14.png">
 
-    - After running the test for the first time now we must comment out the before statement because we don't want to set cookie again, we've already saved it in our beforeEach hook and the remainder of the tests we'll no longer be logged out.
+- After running the test for the first time now we must comment out the before statement because we don't want to set cookie again, we've already saved it in our beforeEach hook and the remainder of the tests we'll no longer be logged out.
 
-    <img src="../../../Images\2021-06-25_20-57-52.png">
+<img src="../../../Images\2021-06-25_20-57-52.png">
 
-    - In trello app create two boards Second one and Third One, log out of system, log back in notice both boards are presented by default.
-    - To test this we visit the url for each individual board on its own it block without loosing cookies in between tests.
+- In trello app create two boards Second one and Third One, log out of system, log back in notice both boards are presented by default.
+- To test this we visit the url for each individual board on its own it block without loosing cookies in between tests.
 
-    <img src="../../../Images\2021-06-25_20-59-21.png">
+<img src="../../../Images\2021-06-25_20-59-21.png">
 
-    - Credentials shouldn't be stored in the commands.js file and cookes shouldn't be stored in the spec file test, we'll be addressing that next.
+- Credentials shouldn't be stored in the commands.js file and cookes shouldn't be stored in the spec file test, we'll be addressing that next.
 
+## _Second iteration_
+- Storing email and password as environment variables under `cypress.json` file passing those as arguments into custom command `login` 
+- Cookies are being stored globally now under support folder > `index.js` file
+```
+Cypress.Cookies.defaults({
+    preserve: 'trello_token',
+  });
+
+```- Added after block that exectues once after all it blocks, here we clear the trello_token cookie so that we no longer have to comment out sections of the code as it was done in the first iteration.
+```
+after(()=>{
+    cy.getCookies().should('have.length', 2)
+    cy.clearCookie('trello_token');
+    cy.getCookie('trello_token').should('be.null');
+});
+
+```
+- 
 ## _trellotest.spec.js_
 - For e2e testing in this application we're only focusing on testing the behavior of a single board, list, tasks associated to this.  We can have multiple boards, lists etc created as we execute the test suite but testing the other items is out of scope.
 - Also we are creating a board in our application runing in localhost getting the ID for that board (id appended to the url) and setting that as our baseUrl in `cypress.json` file.  So we first run only the first it block that contains `cy.addFirstBoard()` grab the url with the board if and use that in `cypress.json`. Then we skip that it block, _this is wrong approach but we'll fix that later._

@@ -22,3 +22,8 @@ import './commands'
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 // This is where you should put it globally
+
+
+Cypress.Cookies.defaults({
+    preserve: 'trello_token',
+  });

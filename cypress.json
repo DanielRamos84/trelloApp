@@ -1,5 +1,13 @@
 {
-  "baseUrl": "http://localhost:3000/board/75984582906",
+  "baseUrl": "http://localhost:3000/board/9822172803",
   "viewportHeight": 500,
-  "viewportWidth": 700
+  "viewportWidth": 700,
+  
+  "env": {
+    "email": "some@email.com",
+    "password": "danrautomation"
+  }
 }
+
+
+
