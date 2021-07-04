@@ -46,6 +46,7 @@ after(()=>{
 
 ```
 ## _trellotest.spec.js_
+## _First iteration_
 - For e2e testing in this application we're only focusing on testing the behavior of a single board, list, tasks associated to this.  We can have multiple boards, lists etc created as we execute the test suite but testing the other items is out of scope.
 - Also we are creating a board in our application runing in localhost getting the ID for that board (id appended to the url) and setting that as our baseUrl in `cypress.json` file.  So we first run only the first it block that contains `cy.addFirstBoard()` grab the url with the board if and use that in `cypress.json`. Then we skip that it block, _this is wrong approach but we'll fix that later._
 
@@ -97,3 +98,46 @@ Star a board moving this to My Starred collection, challenge here is the start e
 - _Solution:_ `_``cy.get('[data-cy="star"]').invoke('hidden')_``
 
 - Solution #3: Use of event listeners `cy.get('[data-cy="board-item"]').trigger('mouseover')`
+
+## _Second iteration_
+-   Checking task name, asserting task text matches the correct index position 1 or two depening whether the user is re arranging the taks we want our test to retry automatically.
+    - Custom command `checkTaskText` that uses `.should` with chai assertion 
+```
+Cypress.Commands.add('checkTaskText', ()=>{
+    cy.get('[data-cy="task-title"]').should(taskNameOne=>{
+    expect(taskNameOne[0]).to.contain('Task #1')
+    expect(taskNameOne[1]).to.contain('Task #2')
+    });
+}); 
+```
+- Integrated plugin for drag and drop functionality see install instructions: <https://www.npmjs.com/package/@4tw/cypress-drag-drop>
+- Declare its use in commands.js entering line `require('@4tw/cypress-drag-drop')`
+- Create custom command `cy.dragDrop()`
+```
+Cypress.Commands.add('dragDrop',()=>{
+    cy.get('[data-cy="task-title"]').eq(0)
+        .as('Task #1')
+  
+    cy.get('[data-cy="task-title"]').eq(1)
+        .as('Task #2')
+
+    cy.get('@Task #1').drag('@Task #2')
+});
+```
+- Upload image to a taks via drag and drop using plugin <https://www.npmjs.com/package/cypress-file-upload>
+- Declare its use in commands.js entering line `import 'cypress-file-upload';` 
+- Create custom command `cy.attachFileDragDrop();`
+```
+Cypress.Commands.add('attachFileDragDrop',()=>{
+    cy.get('[data-cy="task"]').eq(0)
+        .click();
+
+    cy.get('.dropzone')
+        .attachFile('logo.png', { subjectType: 'drag-n-drop' });
+});
+```
+- Finally integrated Cypress Real Events <https://github.com/dmtrKovalenko/cypress-real-events>
+- Cypress event by default are fired using JavaScript and in some instances it behaves different from real events.  This plugin uses native events using Chrome DevTools Protocol.
+- Declare its use in commands.js file line `import "cypress-real-events/support";`
+- Tests such as hovering over an elemnet are much simpler
+    - `cy.get('[data-cy="board-item"]').realHover();`

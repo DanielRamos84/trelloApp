@@ -1,14 +1,6 @@
-Cypress.Commands.add('addBoard', (input) => {
-
-  cy
-    .get('[data-cy="create-board"]')
-    .click();
-
-  cy
-    .get('[data-cy=new-board-input]')
-    .type(input + '{enter}');
-
-})
+require('@4tw/cypress-drag-drop')
+import 'cypress-file-upload';
+import "cypress-real-events/support";
 
 Cypress.Commands.add('login',()=>{
   const email= Cypress.env('email');
@@ -31,7 +23,6 @@ Cypress.Commands.add('login',()=>{
   });
 
 Cypress.Commands.add('addFirstBoard',(boardText)=>{
-  cy.visit('http://localhost:3000/');
         cy.get('[data-cy="create-board"]').click();
         cy.get('[data-cy="new-board-input"]').type(boardText);
         cy.get('[data-cy="new-board-create"]').click();
@@ -58,6 +49,24 @@ Cypress.Commands.add('checkTaskText', ()=>{
     expect(taskNameOne[0]).to.contain('Task #1')
     expect(taskNameOne[1]).to.contain('Task #2')
   });
+});
+
+Cypress.Commands.add('dragDrop',()=>{
+  cy.get('[data-cy="task-title"]').eq(0)
+  .as('Task #1')
+  
+  cy.get('[data-cy="task-title"]').eq(1)
+  .as('Task #2')
+
+  cy.get('@Task #1').drag('@Task #2')
+});
+
+Cypress.Commands.add('attachFileDragDrop',()=>{
+  cy.get('[data-cy="task"]').eq(0)
+    .click();
+
+    cy.get('.dropzone')
+    .attachFile('logo.png', { subjectType: 'drag-n-drop' });
 });
 
 Cypress.Commands.add('showStar',()=>{
