@@ -47,7 +47,13 @@ after(()=>{
 ```
 ## _trellotest.spec.js_
 ## _First iteration_
-- For e2e testing in this application we're only focusing on testing the behavior of a single board, list, tasks associated to this.  We can have multiple boards, lists etc created as we execute the test suite but testing the other items is out of scope.
+- For e2e testing in this application we're only focusing on testing the behavior of a single board, list, tasks associated to this.  Testing against multiple boards is out of scope.
+- Some of the tets:
+    - Create a board, list under board and two tasks under list.
+    - Assert task names
+    - Upload image file to task
+    - Show star on a board using JavaScript native events: Invoke and trigger.
+    - Show star on board using cypress real event plugin and chrome DevTool native events
 - Also we are creating a board in our application runing in localhost getting the ID for that board (id appended to the url) and setting that as our baseUrl in `cypress.json` file.  So we first run only the first it block that contains `cy.addFirstBoard()` grab the url with the board if and use that in `cypress.json`. Then we skip that it block, _this is wrong approach but we'll fix that later._
 
 Visit localhost assert the following: Trello image and Log in button in nav bar, an h1 that reads My Boards, a card that reads Create a board...
@@ -100,7 +106,8 @@ Star a board moving this to My Starred collection, challenge here is the start e
 - Solution #3: Use of event listeners `cy.get('[data-cy="board-item"]').trigger('mouseover')`
 
 ## _Second iteration_
--   Checking task name, asserting task text matches the correct index position 1 or two depening whether the user is re arranging the taks we want our test to retry automatically.
+- Rather than harcoding a Board Id for the test, we create an after block were we make an API call to delete all boards `cy.request('DELETE', "/api/boards");` This was we can start the test from scratch each time creating a board after resetting the state.
+- Checking task name, asserting task text matches the correct index position 1 or two depening whether the user is re arranging the taks we want our test to retry automatically.
     - Custom command `checkTaskText` that uses `.should` with chai assertion 
 ```
 Cypress.Commands.add('checkTaskText', ()=>{
