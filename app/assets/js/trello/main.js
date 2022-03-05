@@ -63,4 +63,8 @@ const app = new Vue({
   router
 }).$mount('#trello-app');
 
-window.app = app;
+// window.app = app;
+
+if (window.Cypress) {
+  window.app = app
+  }

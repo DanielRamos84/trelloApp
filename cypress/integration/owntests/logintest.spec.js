@@ -16,13 +16,13 @@ describe('Suite of tests login', () => {
         cy.get('[data-cy="login-password"]')
             .type(`${Cypress.env('password')}`, {log:false});
         
-        cy.get('[data-cy="login"')
+        cy.contains('[data-cy="login"]', 'Log in')
             .click();
 
-            cy.contains('[data-cy="logged-user"]', 'some@email.com')
-                .click();
+        cy.contains('[data-cy="logged-user"]', 'some@email.com')
+            .click();
 
-        cy.contains('Log out')
+        cy.contains('span', 'Log out')
             .click();
     });
 });
