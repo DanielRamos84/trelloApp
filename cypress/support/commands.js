@@ -8,19 +8,17 @@ Cypress.Commands.add('login',()=>{
   
   cy.contains('[data-cy="login-menu"]', 'Log in').should('be.visible')
     .click();
-  
   cy.get('[data-cy="login-email"').type(email);
-    cy.get('[data-cy="login-password"]').type(password, {log:false})
-    cy.get('[data-cy="login"').click();
-    cy.get('[data-cy="logged-user"]').contains('some@email.com')
+  cy.get('[data-cy="login-password"]').type(password, {log:false})
+  cy.get('[data-cy="login"').click();
+  cy.get('[data-cy="logged-user"]').contains('some@email.com')
   
-    const log= Cypress.log({
-    name:"Login",
-    displayName:"Authorized login using cookies ",
-    message:[`${email}`]        
-    });
-  
+  const log= Cypress.log({
+  name:"Login",
+  displayName:"Authorized login using cookies ",
+  message:[`${email}`]        
   });
+});
 
 Cypress.Commands.add('addFirstBoard',(boardText)=>{
         cy.get('[data-cy="create-board"]').click();
