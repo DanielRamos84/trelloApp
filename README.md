@@ -1,1 +1,5 @@
 ## Using Cypress task and fixtures files
+### What are we trying to accomplish
+1- Need to set the state of our application prior to executing our tests.  We will be using **[cy.task](https://docs.cypress.io/api/commands/task#Syntax)** to run the code at the Node level as well as utilizing **[fixture files](https://docs.cypress.io/api/commands/fixture#Syntax)** to control the output of the API calls that will be responsible to create the data.  For this last part we'll be using **[Axios](https://axios-http.com/docs/intro)**.
+
+#2 We have already covered a test bypassing login via UI by logging once via API in a before hook and setting the cookie named `trello_token` to the value from `body.accessToken`.  Afterwards, in a beforeEach hook we preserve the cookie for this test only using `Cypress.Cookies.preserveOnce` passing in the cookie name. 
