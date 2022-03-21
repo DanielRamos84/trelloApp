@@ -1,8 +1,9 @@
 {
   "baseUrl": "http://localhost:3000/",
-  "viewportHeight": 500,
-  "viewportWidth": 700,
-  
+  "viewportHeight": 1280,
+  "viewportWidth": 1024,
+  "email": "some@email.com",
+  "password": "danrautomation",  
   "env": {
     "email": "some@email.com",
     "password": "danrautomation"
