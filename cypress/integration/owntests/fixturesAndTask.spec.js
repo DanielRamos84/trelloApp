@@ -30,12 +30,12 @@ describe('DB seeding cy.task and fixtures', () => {
         cy.get('[data-cy="logged-user"]').should('contain', 'some@email.com');
     });
 
-    it.only('Check that we have 10 boards', () => {
+    it('Check that we have 10 boards', () => {
         cy.get('[data-cy="board-item"]')
             .should('have.length', 10);
     });
 
-    it.only ('Get board title compare text to fixture file', () => {
+    it ('Get board title compare text to fixture file', () => {
         cy.get('[data-cy="board-item"]')
             .as('boards');
 

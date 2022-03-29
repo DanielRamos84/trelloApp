@@ -1,6 +1,6 @@
 const axios = require('axios')
 
-function seedBoardData({JSONboards, JSONlistBoards}) {
+async function seedBoardData({JSONboards, JSONlistBoards}) {
   axios({
     method: 'DELETE',
     url: 'http://localhost:3000/api/boards',
@@ -14,18 +14,18 @@ function seedBoardData({JSONboards, JSONlistBoards}) {
 const result= JSON.parse(JSONboards)
 const resultsLists= JSON.parse(JSONlistBoards)
 
-result.forEach((item, index) => {
-  axios({
+for (let i=0; i < result.length; i++) {
+  await axios({
     method: 'POST',
             url: 'http://localhost:3000/api/boards',
-            data: item
-  }).then(function(res) {
+            data: result[i]
+  }).then(res => {
     console.log(res.data)
-    // console.log(resultsLists[index].title)
-    // seedBoardLists(res.data.id, resultsLists[index].title)
+    console.log(resultsLists[i].title)
+    seedBoardLists(res.data.id, resultsLists[i].title)
   });
-});  
-return (result)
+  }
+  return (result)
 }
 
 function seedBoardLists(boardId, listTitle) {
